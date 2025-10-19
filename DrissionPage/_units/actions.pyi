@@ -374,19 +374,16 @@ class Actions:
 
     def open_chrome_menu(self) -> Actions:
         """
-        打开 Chrome 浏览器菜单（跨平台）
+        打开 Chrome 浏览器菜单
         
-        该方法会根据操作系统自动选择合适的方式打开菜单：
-        - Windows/Linux: 使用 Alt+F 快捷键打开三点菜单
-        - macOS: 使用 Cmd+, 打开设置页面（替代方案）
+        使用快捷键 Alt+F 打开 Chrome 的三点菜单（汉堡菜单）。
+        这是 Chrome 在 Windows/Linux 上的标准快捷键。
         
         :return: 返回自身，支持链式调用
         
         注意：
-            macOS 上的限制：
-            Chrome 的三点菜单位于浏览器 UI 区域（非网页区域），
-            CDP 协议无法访问浏览器 UI，因此无法直接打开菜单。
-            作为替代方案，在 macOS 上会打开设置页面。
+            macOS 上的 Chrome 没有打开三点菜单的键盘快捷键，
+            此方法在 macOS 上可能无法工作。
         """
         ...
 
@@ -398,28 +395,6 @@ class Actions:
         这是 Chrome 在 Windows 上的标准快捷键。
         
         :return: 返回自身，支持链式调用
-        """
-        ...
-
-    def open_chrome_menu_mac(self) -> Actions:
-        """
-        在 macOS 上打开 Chrome 设置页面（替代方案）
-        
-        macOS 上的限制说明：
-        Chrome 的三点菜单位于浏览器的标题栏区域，属于浏览器 UI 的一部分。
-        Chrome DevTools Protocol (CDP) 只能控制网页内容区域，
-        无法访问或操作浏览器自身的 UI 元素（如标题栏、工具栏、菜单等）。
-        
-        替代方案：
-        使用 Cmd+, 快捷键打开 Chrome 设置页面，这是用户最常访问的功能之一。
-        虽然不是完整的菜单，但提供了大部分常用功能的访问入口。
-        
-        :return: 返回自身，支持链式调用
-        
-        注意：
-            如果需要访问其他菜单功能，可以：
-            1. 使用对应的快捷键（如 Cmd+H 打开历史记录）
-            2. 直接访问 chrome:// 开头的特殊 URL
         """
         ...
 

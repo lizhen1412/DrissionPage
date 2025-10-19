@@ -1,3 +1,4 @@
+#/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
 @Author   : g1879
@@ -18,7 +19,6 @@ from .._functions.locator import get_loc
 from .._functions.settings import Settings as _S
 from .._functions.web import get_ele_txt, make_absolute_link
 from ..errors import LocatorError
-
 
 class SessionElement(DrissionElement):
 

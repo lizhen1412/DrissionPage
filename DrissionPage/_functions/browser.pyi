@@ -1,3 +1,4 @@
+#/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
 @Author   : g1879
@@ -8,7 +9,6 @@
 from typing import Union
 
 from .._configs.chromium_options import ChromiumOptions
-
 
 def connect_browser(option: ChromiumOptions) -> bool:
     """连接或启动浏览器

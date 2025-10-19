@@ -1,3 +1,4 @@
+#/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
 @Author   : g1879
@@ -7,7 +8,6 @@
 """
 from .._functions.settings import Settings
 from ..errors import ElementNotFoundError
-
 
 class NoneElement(object):
     def __init__(self, page=None, method=None, args=None):

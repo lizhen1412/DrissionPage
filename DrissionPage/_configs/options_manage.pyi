@@ -1,3 +1,4 @@
+#/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
 @Author   : g1879
@@ -8,7 +9,6 @@
 from configparser import RawConfigParser
 from pathlib import Path
 from typing import Any, Optional, Union
-
 
 class OptionsManager(object):
     """管理配置文件内容的类"""

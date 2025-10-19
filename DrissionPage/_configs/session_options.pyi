@@ -1,3 +1,4 @@
+#/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
 @Author   : g1879
@@ -14,7 +15,6 @@ from requests.adapters import HTTPAdapter
 from requests.auth import HTTPBasicAuth
 from requests.cookies import RequestsCookieJar
 from requests.structures import CaseInsensitiveDict
-
 
 class SessionOptions(object):
     """requests的Session对象配置类"""

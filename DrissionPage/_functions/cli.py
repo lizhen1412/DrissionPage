@@ -1,3 +1,4 @@
+#/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
 @Author   : g1879
@@ -10,7 +11,6 @@ from click import command, option
 from .._functions.tools import configs_to_here as ch
 from .._configs.chromium_options import ChromiumOptions
 from .._pages.chromium_page import ChromiumPage
-
 
 @command()
 @option("-p", "--set-browser-path", help="设置浏览器路径")

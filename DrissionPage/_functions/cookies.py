@@ -1,3 +1,4 @@
+#/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
 @Author   : g1879
@@ -11,7 +12,6 @@ from http.cookiejar import Cookie, CookieJar
 from tldextract import TLDExtract
 
 from .settings import Settings as _S
-
 
 def cookie_to_dict(cookie):
     if isinstance(cookie, Cookie):

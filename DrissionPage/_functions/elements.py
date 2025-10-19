@@ -1,3 +1,4 @@
+#/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
 @Author   : g1879
@@ -11,7 +12,6 @@ from .locator import is_str_loc, is_selenium_loc
 from .._functions.settings import Settings as _S
 from .._elements.none_element import NoneElement
 from ..errors import LocatorError
-
 
 class SessionElementsList(list):
     def __init__(self, owner=None, *args):

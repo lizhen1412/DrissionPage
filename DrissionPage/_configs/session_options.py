@@ -1,3 +1,4 @@
+#/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
 @Author   : g1879
@@ -15,7 +16,6 @@ from .options_manage import OptionsManager
 from .._functions.cookies import cookies_to_tuple, set_session_cookies
 from .._functions.settings import Settings as _S
 from .._functions.web import format_headers
-
 
 class SessionOptions(object):
 

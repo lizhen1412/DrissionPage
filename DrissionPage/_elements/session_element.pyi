@@ -1,3 +1,4 @@
+#/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
 @Author   : g1879
@@ -15,7 +16,6 @@ from .._functions.elements import SessionElementsList
 from .._pages.chromium_base import ChromiumBase
 from .._pages.chromium_frame import ChromiumFrame
 from .._pages.session_page import SessionPage
-
 
 class SessionElement(DrissionElement):
     """静态元素对象"""

@@ -1,3 +1,4 @@
+#/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
 @Author   : g1879
@@ -7,7 +8,6 @@
 """
 from pathlib import Path
 from typing import Union, Any, Literal, Optional, Tuple
-
 
 class ChromiumOptions(object):
     ini_path: Optional[str] = ...

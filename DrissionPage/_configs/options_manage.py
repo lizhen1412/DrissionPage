@@ -1,3 +1,4 @@
+#/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
 @Author   : g1879
@@ -10,7 +11,6 @@ from pathlib import Path
 from pprint import pprint
 
 from .._functions.settings import Settings as _S
-
 
 class OptionsManager(object):
     def __init__(self, path=None):

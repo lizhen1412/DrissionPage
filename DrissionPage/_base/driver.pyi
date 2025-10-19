@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+#/usr/bin/env python3
+# -*- coding:utf-8 -*-
 """
 @Author   : g1879
 @Contact  : g1879@qq.com
@@ -13,7 +14,6 @@ from requests import Response
 from websocket import WebSocket
 
 from .._base.chromium import Chromium
-
 
 class Driver(object):
     id: str

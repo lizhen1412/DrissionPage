@@ -1,3 +1,4 @@
+#/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
 @Author   : g1879
@@ -8,7 +9,6 @@
 from typing import Any, Optional
 
 from .._base.base import BasePage
-
 
 class NoneElement(object):
     _none_ele_value: Any = ...

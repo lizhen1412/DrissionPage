@@ -1,3 +1,4 @@
+#/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
 @Author   : g1879
@@ -11,7 +12,6 @@ from urllib.parse import urlparse
 
 from .options_manage import OptionsManager
 from .._functions.settings import Settings as _S
-
 
 class ChromiumOptions(object):
     def __init__(self, read_file=True, ini_path=None):

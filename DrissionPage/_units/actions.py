@@ -409,16 +409,19 @@ class Actions:
         key = getattr(Keys, key.upper(), key)
         # 检查是否为修饰键：Alt(\ue00a)、Ctrl(\ue009)、Meta/Command(\ue03d)、Shift(\ue008)
         if key in ('\ue009', '\ue008', '\ue00a', '\ue03d'):
+            # 先计算按下后的 modifier 值
+            new_modifier = self.modifier | modifierBit.get(key, 0)
+            
             # 发送修饰键的实际按键事件
-            # 注意：修饰键本身不带 modifier，所以使用 modifier=0
-            data = make_input_data(0, key, False)
+            # 注意：modifiers 参数应包含该修饰键本身
+            data = make_input_data(new_modifier, key, False)
             if data:
                 # 修饰键使用 rawKeyDown 类型
                 data['type'] = 'rawKeyDown'
                 self.owner._run_cdp('Input.dispatchKeyEvent', **data)
             
-            # 使用位或运算添加修饰键标记
-            self.modifier |= modifierBit.get(key, 0)
+            # 更新内部状态
+            self.modifier = new_modifier
             return self
 
         # 生成键盘事件数据（keyDown 事件）

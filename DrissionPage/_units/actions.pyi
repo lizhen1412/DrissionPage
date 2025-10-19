@@ -43,105 +43,151 @@ KEYS = Literal['NULL', 'CANCEL', 'HELP', 'BACKSPACE', 'meta',
 
 
 class Actions:
-    """用于实现动作链的类"""
+    """
+    Actions 类：用于模拟用户的鼠标和键盘操作
+    
+    该类提供了一系列链式调用的方法，可以模拟真实用户的交互行为，包括：
+    - 鼠标移动、点击、拖拽、滚动
+    - 键盘按键、输入
+    - 文件拖放
+    
+    所有方法都返回 self，支持链式调用，例如：
+    actions.move_to(element).click().type('hello')
+    """
 
     owner: ChromiumBase = ...
     _dr: Driver = ...
-    modifier: int = ...
-    curr_x: float = ...
-    curr_y: float = ...
-    _holding: str = ...
+    modifier: int = ...  # 修饰键状态，使用位掩码表示：Alt=1, Ctrl=2, Meta/Command=4, Shift=8
+    curr_x: float = ...  # 当前鼠标在视口中的 x 坐标
+    curr_y: float = ...  # 当前鼠标在视口中的 y 坐标
+    _holding: str = ...  # 当前按下的鼠标按键（'left'、'right' 或 'middle'）
 
     def __init__(self, owner: ChromiumBase):
         """
-        :param owner: ChromiumBase对象
+        初始化 Actions 对象
+        
+        :param owner: 拥有此 Actions 对象的页面对象（ChromiumPage 或 ChromiumTab）
         """
         ...
 
     def move_to(self, ele_or_loc: Union[ChromiumElement, Tuple[float, float], str],
                 offset_x: float = 0, offset_y: float = 0, duration: float = .5) -> Actions:
-        """鼠标移动到元素中点，或页面上的某个绝对坐标。可设置偏移量
-        当带偏移量时，偏移量相对于元素左上角坐标
-        :param ele_or_loc: 元素对象、绝对坐标或文本定位符，坐标为tuple(int, int)形式
-        :param offset_x: 偏移量x
-        :param offset_y: 偏移量y
-        :param duration: 拖动用时，传入0即瞬间到达
-        :return: 动作链对象本身
+        """
+        将鼠标移动到指定元素或坐标位置
+        
+        该方法会自动处理滚动，确保目标位置在视口内可见。
+        如果目标在视口外，会先滚动页面使其可见，然后再移动鼠标。
+        
+        :param ele_or_loc: 目标元素或坐标
+            - ChromiumElement 对象：移动到元素位置
+            - 定位符字符串：先查找元素，再移动到元素位置
+            - (x, y) 坐标元组：移动到页面坐标（非视口坐标）
+        :param offset_x: x 轴偏移量，默认为 0
+            - None 且 offset_y 也为 None：移动到元素中心点
+            - 0 或其他数值：在元素左上角基础上偏移
+        :param offset_y: y 轴偏移量，默认为 0
+        :param duration: 移动持续时间（秒），模拟真实鼠标移动速度，默认 0.5 秒
+        :return: 返回自身，支持链式调用
         """
         ...
 
     def move(self, offset_x: float = 0, offset_y: float = 0, duration: float = .5) -> Actions:
-        """鼠标相对当前位置移动若干位置
-        :param offset_x: 偏移量x
-        :param offset_y: 偏移量y
-        :param duration: 拖动用时，传入0即瞬间到达
-        :return: 动作链对象本身
+        """
+        相对当前位置移动鼠标
+        
+        该方法通过在起点和终点之间插入多个中间点，模拟真实的鼠标移动轨迹。
+        移动速度是恒定的，每个中间点之间间隔约 0.02 秒（50fps）。
+        
+        :param offset_x: x 轴偏移量（像素），正值向右，负值向左
+        :param offset_y: y 轴偏移量（像素），正值向下，负值向上
+        :param duration: 移动持续时间（秒），默认 0.5 秒
+        :return: 返回自身，支持链式调用
         """
         ...
 
     def click(self, on_ele: Union[ChromiumElement, str] = None, times: int = 1) -> Actions:
-        """点击鼠标左键，可先移动到元素上
-        :param on_ele: ChromiumElement元素或文本定位符
-        :param times: 点击次数
-        :return: 动作链对象本身
+        """
+        左键单击（或多次点击）
+        
+        :param on_ele: 要点击的元素或坐标，None 表示在当前位置点击
+        :param times: 点击次数，用于实现双击、三击等，默认为 1
+        :return: 返回自身，支持链式调用
         """
         ...
 
     def r_click(self, on_ele: Union[ChromiumElement, str] = None, times: int = 1) -> Actions:
-        """点击鼠标右键，可先移动到元素上
-        :param on_ele: ChromiumElement元素或文本定位符
-        :param times: 点击次数
-        :return: 动作链对象本身
+        """
+        右键单击（或多次点击）
+        
+        :param on_ele: 要点击的元素或坐标，None 表示在当前位置点击
+        :param times: 点击次数，默认为 1
+        :return: 返回自身，支持链式调用
         """
         ...
 
     def m_click(self, on_ele: Union[ChromiumElement, str] = None, times: int = 1) -> Actions:
-        """点击鼠标中键，可先移动到元素上
-        :param on_ele: ChromiumElement元素或文本定位符
-        :param times: 点击次数
-        :return: 动作链对象本身
+        """
+        中键单击（或多次点击）
+        
+        :param on_ele: 要点击的元素或坐标，None 表示在当前位置点击
+        :param times: 点击次数，默认为 1
+        :return: 返回自身，支持链式调用
         """
         ...
 
     def hold(self, on_ele: Union[ChromiumElement, str] = None) -> Actions:
-        """按住鼠标左键，可先移动到元素上
-        :param on_ele: ChromiumElement元素或文本定位符
-        :return: 动作链对象本身
+        """
+        按住鼠标左键
+        
+        常用于拖拽操作：hold() -> move_to() -> release()
+        
+        :param on_ele: 要按住的元素或坐标，None 表示在当前位置按住
+        :return: 返回自身，支持链式调用
         """
         ...
 
     def release(self, on_ele: Union[ChromiumElement, str] = None) -> Actions:
-        """释放鼠标左键，可先移动到元素上
-        :param on_ele: ChromiumElement元素或文本定位符
-        :return: 动作链对象本身
+        """
+        释放鼠标左键
+        
+        :param on_ele: 释放位置的元素或坐标，None 表示在当前位置释放
+        :return: 返回自身，支持链式调用
         """
         ...
 
     def r_hold(self, on_ele: Union[ChromiumElement, str] = None) -> Actions:
-        """按住鼠标右键，可先移动到元素上
-        :param on_ele: ChromiumElement元素或文本定位符
-        :return: 动作链对象本身
+        """
+        按住鼠标右键
+        
+        :param on_ele: 要按住的元素或坐标，None 表示在当前位置按住
+        :return: 返回自身，支持链式调用
         """
         ...
 
     def r_release(self, on_ele: Union[ChromiumElement, str] = None) -> Actions:
-        """释放鼠标右键，可先移动到元素上
-        :param on_ele: ChromiumElement元素或文本定位符
-        :return: 动作链对象本身
+        """
+        释放鼠标右键
+        
+        :param on_ele: 释放位置的元素或坐标，None 表示在当前位置释放
+        :return: 返回自身，支持链式调用
         """
         ...
 
     def m_hold(self, on_ele: Union[ChromiumElement, str] = None) -> Actions:
-        """按住鼠标中键，可先移动到元素上
-        :param on_ele: ChromiumElement元素或文本定位符
-        :return: 动作链对象本身
+        """
+        按住鼠标中键
+        
+        :param on_ele: 要按住的元素或坐标，None 表示在当前位置按住
+        :return: 返回自身，支持链式调用
         """
         ...
 
     def m_release(self, on_ele: Union[ChromiumElement, str] = None) -> Actions:
-        """释放鼠标中键，可先移动到元素上
-        :param on_ele: ChromiumElement元素或文本定位符
-        :return: 动作链对象本身
+        """
+        释放鼠标中键
+        
+        :param on_ele: 释放位置的元素或坐标，None 表示在当前位置释放
+        :return: 返回自身，支持链式调用
         """
         ...
 
@@ -149,116 +195,247 @@ class Actions:
               on_ele: Union[ChromiumElement, str] = None,
               button: str = 'left',
               count: int = 1) -> Actions:
-        """按下鼠标按键
-        :param on_ele: ChromiumElement元素或文本定位符
-        :param button: 要按下的按键
-        :param count: 点击次数
-        :return: 动作链对象本身
+        """
+        内部方法：按下鼠标按键
+        
+        :param on_ele: 要按住的元素或坐标，None 表示在当前位置按住
+        :param button: 按键类型，'left'、'right' 或 'middle'
+        :param count: 点击次数，用于实现双击、三击等
+        :return: 返回自身，支持链式调用
         """
         ...
 
     def _release(self, button: str) -> Actions:
-        """释放鼠标按键
-        :param button: 要释放的按键
-        :return: 动作链对象本身
+        """
+        内部方法：释放鼠标按键
+        
+        :param button: 按键类型，'left'、'right' 或 'middle'
+        :return: 返回自身，支持链式调用
         """
         ...
 
     def scroll(self, delta_y: int = 0, delta_x: int = 0,
                on_ele: Union[ChromiumElement, str] = None) -> Actions:
-        """滚动鼠标滚轮，可先移动到元素上
-        :param delta_y: 滚轮变化值y
-        :param delta_x: 滚轮变化值x
-        :param on_ele: ChromiumElement元素
-        :return: 动作链对象本身
+        """
+        在当前位置或指定元素上执行滚轮操作
+        
+        :param delta_y: 垂直滚动量，正值向下滚动，负值向上滚动
+        :param delta_x: 水平滚动量，正值向右滚动，负值向左滚动
+        :param on_ele: 要滚动的元素或坐标，None 表示在当前位置滚动
+        :return: 返回自身，支持链式调用
         """
         ...
 
     def up(self, pixel: int) -> Actions:
-        """鼠标向上移动若干像素
-        :param pixel: 鼠标移动的像素值
-        :return: 动作链对象本身
+        """
+        向上移动鼠标
+        
+        :param pixel: 移动的像素数
+        :return: 返回自身，支持链式调用
         """
         ...
 
     def down(self, pixel: int) -> Actions:
-        """鼠标向下移动若干像素
-        :param pixel: 鼠标移动的像素值
-        :return: 动作链对象本身
+        """
+        向下移动鼠标
+        
+        :param pixel: 移动的像素数
+        :return: 返回自身，支持链式调用
         """
         ...
 
     def left(self, pixel: int) -> Actions:
-        """鼠标向左移动若干像素
-        :param pixel: 鼠标移动的像素值
-        :return: 动作链对象本身
+        """
+        向左移动鼠标
+        
+        :param pixel: 移动的像素数
+        :return: 返回自身，支持链式调用
         """
         ...
 
     def right(self, pixel: int) -> Actions:
-        """鼠标向右移动若干像素
-        :param pixel: 鼠标移动的像素值
-        :return: 动作链对象本身
+        """
+        向右移动鼠标
+        
+        :param pixel: 移动的像素数
+        :return: 返回自身，支持链式调用
         """
         ...
 
     def key_down(self, key: Union[KEYS, str]) -> Actions:
-        """按下键盘上的按键，
-        :param key: 使用Keys获取的按键，或 'DEL' 形式按键名称
-        :return: 动作链对象本身
+        """
+        按下键盘按键（不释放）
+        
+        该方法用于模拟按住某个键，常用于组合键操作。
+        例如：key_down('ctrl').key_down('c').key_up('c').key_up('ctrl')
+        
+        :param key: 按键名称，可以是：
+            - Keys 类中的常量名（如 'ENTER'、'TAB'）
+            - 字符（如 'a'、'1'）
+            - 修饰键（ALT、CTRL、META/COMMAND、SHIFT）
+        :return: 返回自身，支持链式调用
+        
+        注意：
+            修饰键（Alt、Ctrl、Command、Shift）会被记录到 modifier 状态中，
+            影响后续的鼠标和键盘事件。
         """
         ...
 
     def key_up(self, key: Union[KEYS, str]) -> Actions:
-        """提起键盘上的按键
-        :param key: 按键，特殊字符见Keys
-        :return: 动作链对象本身
+        """
+        释放键盘按键
+        
+        该方法用于释放之前按下的按键。
+        
+        :param key: 按键名称，可以是：
+            - Keys 类中的常量名（如 'ENTER'、'TAB'）
+            - 字符（如 'a'、'1'）
+            - 修饰键（ALT、CTRL、META/COMMAND、SHIFT）
+        :return: 返回自身，支持链式调用
+        
+        注意：
+            修饰键（Alt、Ctrl、Command、Shift）释放时会从 modifier 状态中移除。
         """
         ...
 
     def type(self,
              keys: Union[KEYS, str, list, tuple],
              interval: float = 0) -> Actions:
-        """用模拟键盘按键方式输入文本，可输入字符串，也可输入组合键
-        :param keys: 要按下的按键，特殊字符和多个文本可用list或tuple传入
-        :param interval: 每个字符之间间隔时间
-        :return: 动作链对象本身
+        """
+        逐个输入键盘按键
+        
+        该方法会模拟真实的打字过程，依次按下并释放每个按键。
+        支持输入普通字符、特殊按键和修饰键组合。
+        
+        :param keys: 要输入的内容，可以是：
+            - 字符串：普通文本或包含特殊按键的字符串
+            - 列表/元组：多个按键的序列
+            - 数字：会转换为字符串
+        :param interval: 每个按键之间的间隔时间（秒），默认为 0
+        :return: 返回自身，支持链式调用
+        
+        注意：
+            - 修饰键（Alt、Ctrl、Command、Shift）会在输入过程中保持按下状态，
+              在所有字符输入完成后统一释放
+            - 特殊按键使用 Unicode 私有区域编码（\ue009 等）
         """
         ...
 
     def input(self, text: Any) -> Actions:
-        """输入文本，也可输入组合键，组合键用tuple形式输入
-        :param text: 文本值或按键组合
-        :return: 动作链对象本身
+        """
+        快速输入文本
+        
+        该方法不模拟按键过程，直接将文本插入到当前焦点元素中，速度更快。
+        适用于需要快速输入大量文本的场景。
+        
+        :param text: 要输入的文本内容
+        :return: 返回自身，支持链式调用
+        
+        注意：
+            - 该方法不会触发 keydown/keyup 事件
+            - 对于需要按键事件的场景，应使用 type() 方法
         """
         ...
 
     def drag_in(self, ele_or_loc: Union[str, ChromiumElement], files: Union[str, list, tuple] = None,
                 text: str = None, title: str = None, baseURL: str = None) -> Actions:
-        """触发从浏览器外拖入文件、文本等事件
-        :param ele_or_loc: 接收拖动动作的元素
-        :param files: 要拖入文件路径，可多个，不为None时下面参数无效
-        :param text: 要拖入的文本，files参数为None时才生效
-        :param title: 如果text是超链接，可在此设置title，与baseURL互斥
-        :param baseURL: 如果text是html，可在此设置baseUrl，与title互斥
-        :return:
+        """
+        将文件或文本拖放到指定元素
+        
+        该方法模拟拖放操作，可以用于：
+        - 上传文件（通过拖放文件到上传区域）
+        - 拖放文本到可编辑区域
+        - 拖放链接
+        
+        :param ele_or_loc: 目标元素或坐标
+        :param files: 要拖放的文件路径，可以是单个路径字符串或路径列表
+        :param text: 要拖放的文本内容
+        :param title: 文本的标题（用于 URI 列表）
+        :param baseURL: 文本的基础 URL（用于 URI 列表）
+        :return: 返回自身，支持链式调用
+        
+        注意：
+            - files 和 text 参数互斥，只能提供其中一个
+            - 拖放文件时，dragOperationsMask=16 表示复制操作
+            - 拖放文本时，dragOperationsMask=1 表示移动操作
         """
         ...
 
     def wait(self, second: float, scope: float = None) -> Actions:
-        """等待若干秒，如传入两个参数，等待时间为这两个数间的一个随机数
-        :param second: 秒数
-        :param scope: 随机数范围
-        :return: None
+        """
+        等待指定时间
+        
+        :param second: 等待的秒数
+        :param scope: 等待的作用域（传递给页面的 wait 方法）
+        :return: 返回自身，支持链式调用
+        """
+        ...
+
+    def open_chrome_menu(self) -> Actions:
+        """
+        打开 Chrome 浏览器菜单（跨平台）
+        
+        该方法会根据操作系统自动选择合适的方式打开菜单：
+        - Windows/Linux: 使用 Alt+F 快捷键打开三点菜单
+        - macOS: 使用 Cmd+, 打开设置页面（替代方案）
+        
+        :return: 返回自身，支持链式调用
+        
+        注意：
+            macOS 上的限制：
+            Chrome 的三点菜单位于浏览器 UI 区域（非网页区域），
+            CDP 协议无法访问浏览器 UI，因此无法直接打开菜单。
+            作为替代方案，在 macOS 上会打开设置页面。
+        """
+        ...
+
+    def open_chrome_menu_windows(self) -> Actions:
+        """
+        在 Windows 上打开 Chrome 菜单
+        
+        使用快捷键 Alt+F 打开 Chrome 的三点菜单（汉堡菜单）。
+        这是 Chrome 在 Windows 上的标准快捷键。
+        
+        :return: 返回自身，支持链式调用
+        """
+        ...
+
+    def open_chrome_menu_mac(self) -> Actions:
+        """
+        在 macOS 上打开 Chrome 设置页面（替代方案）
+        
+        macOS 上的限制说明：
+        Chrome 的三点菜单位于浏览器的标题栏区域，属于浏览器 UI 的一部分。
+        Chrome DevTools Protocol (CDP) 只能控制网页内容区域，
+        无法访问或操作浏览器自身的 UI 元素（如标题栏、工具栏、菜单等）。
+        
+        替代方案：
+        使用 Cmd+, 快捷键打开 Chrome 设置页面，这是用户最常访问的功能之一。
+        虽然不是完整的菜单，但提供了大部分常用功能的访问入口。
+        
+        :return: 返回自身，支持链式调用
+        
+        注意：
+            如果需要访问其他菜单功能，可以：
+            1. 使用对应的快捷键（如 Cmd+H 打开历史记录）
+            2. 直接访问 chrome:// 开头的特殊 URL
         """
         ...
 
 
 def location_to_client(page: ChromiumBase, lx: int, ly: int) -> tuple:
-    """绝对坐标转换为视口坐标
+    """
+    将页面坐标转换为视口坐标
+    
+    页面坐标是相对于整个文档的绝对位置（包括滚动区域），
+    视口坐标是相对于浏览器可见区域的位置（不包括滚动的部分）。
+    
     :param page: 页面对象
-    :param lx: 绝对坐标x
-    :param ly: 绝对坐标y
-    :return: 视口坐标元组
+    :param lx: 页面 x 坐标
+    :param ly: 页面 y 坐标
+    :return: (视口 x 坐标, 视口 y 坐标) 元组
+    
+    算法：
+        视口坐标 = 页面坐标 - 滚动偏移量
     """
     ...

@@ -162,6 +162,20 @@
 4. twine upload dist/* ✅
 ```
 
+
+```shell
+pip install drissionpage-4.1.1.2+qianxin.20241019-py3-none-any.whl
+
+# 1. 先卸载当前的 drissionpage
+uv pip uninstall drissionpage
+
+# 2. 安装本地的 wheel 文件
+uv pip install dist/drissionpage-4.1.1.2+qianxin.20241019-py3-none-any.whl
+
+# 3. 更新 lockfile
+uv lock
+```
+
 ## 📊 统计信息
 
 - **总行数**: ~860 行
